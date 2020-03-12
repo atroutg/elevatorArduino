@@ -1,51 +1,50 @@
 /*
------------------ Rutinas para Ascensor para casa Barbie de tres pisos ----------------------
-| Plataforma: Arduino Nano
-| Creado por: Armando Trout
-| Creado en: Diciembre de 2017
+----------------- Elevator Barbie doll House with Arduino nano - 3 floors ----------------------
+| platform: Arduino Nano
+| Created by : Armando Trout
+| Created at: December 2017
 |
 ---------------------------------------------------------------------------------------------
 */
 
-// asignacion de pines del atmega
+//pins Nano
 
 #define LED 13
-#define MOTOR_STEP A2   // control de pasos - Pololu driver A4988 Stepper Motor Driver Carrier 
-#define MOTOR_DIR A1    // Control de direccion - Pololu driver A4988 Stepper Motor Driver Carrier
-#define P1 8            // Control pin pulsador primera planta 
-#define P2 10           // Control pin pulsador segunda planta
-#define P3 12           // Control pin pulsador tercera planta 
-#define FIN_RUN 2       // fin de carrera - posicion HOME
+#define MOTOR_STEP A2   // Pololu driver A4988 Stepper Motor Driver Carrier 
+#define MOTOR_DIR A1    // Pololu driver A4988 Stepper Motor Driver Carrier
+#define P1 8            // pulls button first floor 
+#define P2 10           // pulls button second floor
+#define P3 12           // pulls button third floor 
+#define FIN_RUN 2       // HOME position
 
 
 
-// declaracion de variables y constantes
+// vars and const
 
-const int delay_pasos = 1500; // retardo de movimiento del motor em microsegundos  1000 us = 1ms
-int pisoActual = 1; //definimos la planta actual donde comienza el ascensor
-
+const int delay_pasos = 1500; // delay moving  1000 us = 1ms
+int pisoActual = 1; //initial floor
 
 
 void setup(){
 
-  // led de indicacion de funcionamiento
+  // run led
   pinMode( LED, OUTPUT);  
 
-  // configuracion de pines que conectan con el driver del motor a pasos
+  // pins to driver motor Polulu
   pinMode( MOTOR_DIR, OUTPUT);
   pinMode( MOTOR_STEP, OUTPUT);       
 
 
-  // pulsadores en pisos
-  pinMode(P1, INPUT); // pulsador del piso 1
-  pinMode(P2, INPUT); // pulsador del piso 2
-  pinMode(P3, INPUT); // pulsador del piso 3
+  // pulls buttons of  floors
+  pinMode(P1, INPUT); // floor one
+  pinMode(P2, INPUT); // floor two
+  pinMode(P3, INPUT); // floor three
 
-  // Fin de carrera en el piso 1
+  // home
   pinMode(FIN_RUN, INPUT); 
 
   
-  // inicializo el sistema buscando la posicion inicial en el piso 1
+  // subrutine of inicialization
   inicializacion();
 
 }
@@ -56,7 +55,7 @@ void loop(){
 
 
   
-  // ir al piso 1
+  // goto floor 1
 
   if( digitalRead(P1) == HIGH && pisoActual != 1 ){
      
@@ -72,7 +71,7 @@ void loop(){
   }
 
   
-   // ir al piso 2 
+   // goto floor 2 
   
   if( digitalRead(P2) == HIGH && pisoActual != 2 ){  
      
@@ -92,7 +91,7 @@ void loop(){
   }
 
   
-  // ir al piso 3
+  // goto floor 3
 
   if( digitalRead(P3) == HIGH && pisoActual != 3){
    
@@ -114,7 +113,7 @@ void loop(){
 
 
 
-}// fin loop
+}// end loop
 
 
 
@@ -125,7 +124,7 @@ void loop(){
 void inicializacion(){
   
 
-  // verificar si el fin de carrera se encuentra pulsado de ser asi nos encontramos en el piso 1
+  
   if ( digitalRead(FIN_RUN) == HIGH ){
 
     moverMotor(100, HIGH);
@@ -155,12 +154,12 @@ void inicializacion(){
 
 
 
-// rutina encargada de controlar el motor a pasos
+
 
 void moverMotor(int pasos, int direccion){
   
 
-  digitalWrite(MOTOR_DIR, direccion); // direccion tiene dos posibles valores si es HIGH el ascensor sube si es LOW el ascensor baja
+  digitalWrite(MOTOR_DIR, direccion); // if direccion == HIGH -> elevetor goes up 
  
   for(int x = 0; x < pasos; x++) {
 
